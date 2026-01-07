@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { db } from '../lib/db';
 import { Users, HandCoins, Sparkles, Copy, X, Briefcase, UserCircle, ArrowRight } from 'lucide-react';

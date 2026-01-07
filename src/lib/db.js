@@ -1,4 +1,3 @@
-
 const DB_KEYS = {
     USER: 'growth_assist_user',
     PLANS: 'growth_assist_plans',

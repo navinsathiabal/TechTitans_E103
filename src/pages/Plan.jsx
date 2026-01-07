@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { db } from '../lib/db';
 import { Calendar as CalIcon, IndianRupee, Clock, MapPin, AlertTriangle, CheckCircle } from 'lucide-react';

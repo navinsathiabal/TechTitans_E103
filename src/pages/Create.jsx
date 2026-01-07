@@ -1,7 +1,7 @@
-
 import React, { useState } from 'react';
 import { db } from '../lib/db';
-import { Upload, Image as ImageIcon, Send, Wand2, UserPlus, Clock } from 'lucide-react';
+import { generateImage, generateCaptions, generateHashtags, getStylePreset } from '../lib/stabilityAI';
+import { Upload, Image as ImageIcon, Send, Wand2, UserPlus, Clock, Sparkles } from 'lucide-react';
 import './Create.css';
 
 export default function Create() {
@@ -17,82 +17,55 @@ export default function Create() {
         }
     };
 
-    const handleGenerate = () => {
+    const handleGenerate = async () => {
+        if (!content.trim()) {
+            alert('Please describe what you\'re promoting first!');
+            return;
+        }
+
         setIsGenerating(true);
 
-        // Simulate AI Text Analysis & Generation
-        setTimeout(() => {
-            const prompt = content.toLowerCase();
-            let aiImage = "https://images.unsplash.com/photo-1493612276216-9c78370631f3?auto=format&fit=crop&w=800&q=80"; // Default
-            let aiCaptions = [];
-            let aiHashtags = "";
+        try {
+            // Determine the best style preset based on product description
+            const stylePreset = getStylePreset(content);
 
-            // Product Context Logic (Simulating AI)
-            if (prompt.match(/(shirt|dress|jeans|hoodie|wear|fashion|outfit|style|cloth|bag|wallet)/)) {
-                aiImage = "https://loremflickr.com/800/800/fashion,style"; // Fashion
-                aiCaptions = [
-                    "Elevate your style with the " + (content || "latest collection") + ". ✨",
-                    "Fit check! ✅ Showing off our new " + (content || "arrivals") + ".",
-                    "Comfort meets style. The " + (content || "look") + " you've been waiting for."
-                ];
-                aiHashtags = "#Apparel #StyleInspo #OOTD #NewSeason";
-            }
-            else if (prompt.match(/(cream|skin|oil|face|beauty|glow|serum|makeup|soap)/)) {
-                aiImage = "https://loremflickr.com/800/800/skincare,beauty"; // Beauty
-                aiCaptions = [
-                    "Get that natural glow with " + (content || "our essentials") + ". 🌿",
-                    "Self-care sort of day featuring " + (content || "our favorites") + ". ✨",
-                    "Pure ingredients, powerful results. Discover " + (content || "beauty") + "."
-                ];
-                aiHashtags = "#Skincare #BeautyRoutine #GlowUp #SelfCare";
-            }
-            else if (prompt.match(/(chair|table|lamp|decor|home|sofa|bed|room|wood|ceramic)/)) {
-                aiImage = "https://loremflickr.com/800/800/furniture,interior"; // Home
-                aiCaptions = [
-                    "Transform your space with " + (content || "this piece") + ". 🏠",
-                    "Interior goals. Featuring our " + (content || "collection") + ".",
-                    "Crafted for comfort and design. Meet the " + (content || "new addition") + "."
-                ];
-                aiHashtags = "#InteriorDesign #HomeDecor #DreamHome #Artisan";
-            }
-            else if (prompt.match(/(tech|app|digital|software|mouse|keyboard|laptop|phone|gadget|device|monitor)/)) {
-                aiImage = "https://loremflickr.com/800/800/technology,gadget"; // Tech
+            // Check if API key is configured
+            const hasApiKey = import.meta.env.VITE_STABILITY_API_KEY && 
+                             import.meta.env.VITE_STABILITY_API_KEY !== 'your_stability_ai_api_key_here';
 
-                aiCaptions = [
-                    "Innovation meeting simplicity. 💡 " + (content || ""),
-                    "Level up your workflow with " + (content || "our new tools") + ". 🚀",
-                    "Future-proof your setup today. #TechLife"
-                ];
-                aiHashtags = "#Tech #Startup #Innovation #DigitalGrowth #Setup";
-            }
-            else {
-                // Generic / Dynamic Fallback
-                // Try to find a relevant image using the user's own words
-                const stopWords = ['the', 'and', 'new', 'our', 'with', 'for', 'this', 'that'];
-                const keywords = prompt.split(' ')
-                    .filter(w => w.length > 2 && !stopWords.includes(w))
-                    .slice(0, 2) // Take top 2 significant words
-                    .join(',');
+            // Generate image using Stability AI (or fallback)
+            const generatedImageUrl = await generateImage(content, {
+                width: 1024,
+                height: 1024,
+                style: stylePreset,
+                steps: 30,
+                cfgScale: 7,
+            });
 
-                const searchTags = keywords || "product,business"; // Fallback if no keywords found
-                aiImage = `https://loremflickr.com/800/800/${searchTags}`;
+            // Generate captions and hashtags
+            const aiCaptions = generateCaptions(content);
+            const aiHashtags = generateHashtags(content);
 
-                aiCaptions = [
-                    "Introducing: " + (content || "The next big thing") + ". Experience quality like never before.",
-                    "Detailed look at " + (content || "our product") + ". Designed for those who appreciate craftsmanship.",
-                    "Why we love " + (content || "this") + ": It stands out in every way. ✨"
-                ];
-                aiHashtags = "#ProductDesign #Quality #SmallBiz #" + (keywords.split(',')[0] || "MustHave");
-            }
+            // Get current time for scheduling suggestion
+            const now = new Date();
+            const tomorrow = new Date(now);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const scheduleSuggestion = `Tomorrow at 9:00 AM (High Engagement)`;
 
             setGenerated({
-                image: imageFile || aiImage,
+                image: imageFile || generatedImageUrl,
                 captions: aiCaptions,
                 hashtags: aiHashtags,
-                scheduleSuggestion: "Tomorrow at 9:00 AM (High Engagement)"
+                scheduleSuggestion: scheduleSuggestion,
+                styleUsed: hasApiKey ? stylePreset : 'stock-photo',
+                usingFallback: !hasApiKey && !imageFile,
             });
+        } catch (error) {
+            console.error('Error generating content:', error);
+            alert(`Failed to generate content: ${error.message}`);
+        } finally {
             setIsGenerating(false);
-        }, 2000);
+        }
     };
 
     const handleCaptionSwap = (index) => {
@@ -192,6 +165,20 @@ export default function Create() {
                                     </div>
                                 </div>
                             </div>
+
+
+                            {generated.usingFallback ? (
+                                <div className="ai-info-badge" style={{ background: 'rgba(245, 158, 11, 0.1)', borderColor: 'rgba(245, 158, 11, 0.3)' }}>
+                                    <Sparkles size={14} />
+                                    <span>Using stock photo - Add Stability AI key in .env for AI generation</span>
+                                </div>
+                            ) : generated.styleUsed && (
+                                <div className="ai-info-badge">
+                                    <Sparkles size={14} />
+                                    <span>Generated with {generated.styleUsed.replace(/-/g, ' ')} style</span>
+                                </div>
+                            )}
+
 
                             <div className="action-buttons">
                                 <button className="btn-action primary">

@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { db } from '../lib/db';
 import { TrendingUp, Users, IndianRupee, Calendar } from 'lucide-react';
