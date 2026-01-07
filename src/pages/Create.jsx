@@ -17,82 +17,117 @@ export default function Create() {
         }
     };
 
-    const handleGenerate = () => {
+    const handleGenerate = async () => {
         setIsGenerating(true);
 
-        // Simulate AI Text Analysis & Generation
-        setTimeout(() => {
-            const prompt = content.toLowerCase();
-            let aiImage = "https://images.unsplash.com/photo-1493612276216-9c78370631f3?auto=format&fit=crop&w=800&q=80"; // Default
-            let aiCaptions = [];
-            let aiHashtags = "";
+        const prompt = content.toLowerCase();
+        let aiImage = "https://images.unsplash.com/photo-1493612276216-9c78370631f3?auto=format&fit=crop&w=800&q=80"; // Default
+        let aiCaptions = [];
+        let aiHashtags = "";
 
-            // Product Context Logic (Simulating AI)
-            if (prompt.match(/(shirt|dress|jeans|hoodie|wear|fashion|outfit|style|cloth|bag|wallet)/)) {
-                aiImage = "https://loremflickr.com/800/800/fashion,style"; // Fashion
-                aiCaptions = [
-                    "Elevate your style with the " + (content || "latest collection") + ". ✨",
-                    "Fit check! ✅ Showing off our new " + (content || "arrivals") + ".",
-                    "Comfort meets style. The " + (content || "look") + " you've been waiting for."
-                ];
-                aiHashtags = "#Apparel #StyleInspo #OOTD #NewSeason";
-            }
-            else if (prompt.match(/(cream|skin|oil|face|beauty|glow|serum|makeup|soap)/)) {
-                aiImage = "https://loremflickr.com/800/800/skincare,beauty"; // Beauty
-                aiCaptions = [
-                    "Get that natural glow with " + (content || "our essentials") + ". 🌿",
-                    "Self-care sort of day featuring " + (content || "our favorites") + ". ✨",
-                    "Pure ingredients, powerful results. Discover " + (content || "beauty") + "."
-                ];
-                aiHashtags = "#Skincare #BeautyRoutine #GlowUp #SelfCare";
-            }
-            else if (prompt.match(/(chair|table|lamp|decor|home|sofa|bed|room|wood|ceramic)/)) {
-                aiImage = "https://loremflickr.com/800/800/furniture,interior"; // Home
-                aiCaptions = [
-                    "Transform your space with " + (content || "this piece") + ". 🏠",
-                    "Interior goals. Featuring our " + (content || "collection") + ".",
-                    "Crafted for comfort and design. Meet the " + (content || "new addition") + "."
-                ];
-                aiHashtags = "#InteriorDesign #HomeDecor #DreamHome #Artisan";
-            }
-            else if (prompt.match(/(tech|app|digital|software|mouse|keyboard|laptop|phone|gadget|device|monitor)/)) {
-                aiImage = "https://loremflickr.com/800/800/technology,gadget"; // Tech
+        // Product Context Logic (Simulating AI for text & fallback image)
+        if (prompt.match(/(shirt|dress|jeans|hoodie|wear|fashion|outfit|style|cloth|bag|wallet)/)) {
+            aiImage = "https://loremflickr.com/800/800/fashion,style"; // Fashion
+            aiCaptions = [
+                "Elevate your style with the " + (content || "latest collection") + ". ✨",
+                "Fit check! ✅ Showing off our new " + (content || "arrivals") + ".",
+                "Comfort meets style. The " + (content || "look") + " you've been waiting for."
+            ];
+            aiHashtags = "#Apparel #StyleInspo #OOTD #NewSeason";
+        }
+        else if (prompt.match(/(cream|skin|oil|face|beauty|glow|serum|makeup|soap)/)) {
+            aiImage = "https://loremflickr.com/800/800/skincare,beauty"; // Beauty
+            aiCaptions = [
+                "Get that natural glow with " + (content || "our essentials") + ". 🌿",
+                "Self-care sort of day featuring " + (content || "our favorites") + ". ✨",
+                "Pure ingredients, powerful results. Discover " + (content || "beauty") + "."
+            ];
+            aiHashtags = "#Skincare #BeautyRoutine #GlowUp #SelfCare";
+        }
+        else if (prompt.match(/(chair|table|lamp|decor|home|sofa|bed|room|wood|ceramic)/)) {
+            aiImage = "https://loremflickr.com/800/800/furniture,interior"; // Home
+            aiCaptions = [
+                "Transform your space with " + (content || "this piece") + ". 🏠",
+                "Interior goals. Featuring our " + (content || "collection") + ".",
+                "Crafted for comfort and design. Meet the " + (content || "new addition") + "."
+            ];
+            aiHashtags = "#InteriorDesign #HomeDecor #DreamHome #Artisan";
+        }
+        else if (prompt.match(/(tech|app|digital|software|mouse|keyboard|laptop|phone|gadget|device|monitor)/)) {
+            aiImage = "https://loremflickr.com/800/800/technology,gadget"; // Tech
 
-                aiCaptions = [
-                    "Innovation meeting simplicity. 💡 " + (content || ""),
-                    "Level up your workflow with " + (content || "our new tools") + ". 🚀",
-                    "Future-proof your setup today. #TechLife"
-                ];
-                aiHashtags = "#Tech #Startup #Innovation #DigitalGrowth #Setup";
+            aiCaptions = [
+                "Innovation meeting simplicity. 💡 " + (content || ""),
+                "Level up your workflow with " + (content || "our new tools") + ". 🚀",
+                "Future-proof your setup today. #TechLife"
+            ];
+            aiHashtags = "#Tech #Startup #Innovation #DigitalGrowth #Setup";
+        }
+        else {
+            // Generic / Dynamic Fallback
+            // Try to find a relevant image using the user's own words
+            const stopWords = ['the', 'and', 'new', 'our', 'with', 'for', 'this', 'that'];
+            const keywords = prompt.split(' ')
+                .filter(w => w.length > 2 && !stopWords.includes(w))
+                .slice(0, 2) // Take top 2 significant words
+                .join(',');
+
+            const searchTags = keywords || "product,business"; // Fallback if no keywords found
+            aiImage = `https://loremflickr.com/800/800/${searchTags}`;
+
+            aiCaptions = [
+                "Introducing: " + (content || "The next big thing") + ". Experience quality like never before.",
+                "Detailed look at " + (content || "our product") + ". Designed for those who appreciate craftsmanship.",
+                "Why we love " + (content || "this") + ": It stands out in every way. ✨"
+            ];
+            aiHashtags = "#ProductDesign #Quality #SmallBiz #" + (keywords.split(',')[0] || "MustHave");
+        }
+
+        // STABILITY AI API CALL
+        if (!imageFile && content.trim()) {
+            try {
+                const response = await fetch("https://api.stability.ai/v1/generation/stable-diffusion-xl-1024-v1-0/text-to-image", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Accept: "application/json",
+                        Authorization: "Bearer ",
+                    },
+                    body: JSON.stringify({
+                        text_prompts: [
+                            {
+                                text: content,
+                                weight: 1,
+                            },
+                        ],
+                        cfg_scale: 7,
+                        height: 1024,
+                        width: 1024,
+                        samples: 1,
+                        steps: 30,
+                    }),
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.artifacts && data.artifacts.length > 0) {
+                        aiImage = `data:image/png;base64,${data.artifacts[0].base64}`;
+                    }
+                } else {
+                    console.warn("Stability AI generation failed, falling back to stock image.", await response.text());
+                }
+            } catch (error) {
+                console.error("Error generating image:", error);
             }
-            else {
-                // Generic / Dynamic Fallback
-                // Try to find a relevant image using the user's own words
-                const stopWords = ['the', 'and', 'new', 'our', 'with', 'for', 'this', 'that'];
-                const keywords = prompt.split(' ')
-                    .filter(w => w.length > 2 && !stopWords.includes(w))
-                    .slice(0, 2) // Take top 2 significant words
-                    .join(',');
+        }
 
-                const searchTags = keywords || "product,business"; // Fallback if no keywords found
-                aiImage = `https://loremflickr.com/800/800/${searchTags}`;
-
-                aiCaptions = [
-                    "Introducing: " + (content || "The next big thing") + ". Experience quality like never before.",
-                    "Detailed look at " + (content || "our product") + ". Designed for those who appreciate craftsmanship.",
-                    "Why we love " + (content || "this") + ": It stands out in every way. ✨"
-                ];
-                aiHashtags = "#ProductDesign #Quality #SmallBiz #" + (keywords.split(',')[0] || "MustHave");
-            }
-
-            setGenerated({
-                image: imageFile || aiImage,
-                captions: aiCaptions,
-                hashtags: aiHashtags,
-                scheduleSuggestion: "Tomorrow at 9:00 AM (High Engagement)"
-            });
-            setIsGenerating(false);
-        }, 2000);
+        setGenerated({
+            image: imageFile || aiImage,
+            captions: aiCaptions,
+            hashtags: aiHashtags,
+            scheduleSuggestion: "Tomorrow at 9:00 AM (High Engagement)"
+        });
+        setIsGenerating(false);
     };
 
     const handleCaptionSwap = (index) => {
