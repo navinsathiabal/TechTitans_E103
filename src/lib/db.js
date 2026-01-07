@@ -88,9 +88,21 @@ export const db = {
         // Simulated "Database" of technicians
         await new Promise(r => setTimeout(r, SIMULATED_DELAY));
         return [
-            { id: 'c1', name: "Sarah Jenkins", role: "Photographer", rate: "$50/hr", tags: ["Product", "Lifestyle"] },
-            { id: 'c2', name: "Mike Chen", role: "Video Editor", rate: "$150/project", tags: ["Reels", "TikTok"] },
-            { id: 'c3', name: "Design Studio A", role: "Graphic Design", rate: "$40/hr", tags: ["Branding", "Logos"] },
+            { id: 'c1', name: "Sarah Jenkins", role: "Photographer", rate: "₹2,500/hr", tags: ["Product", "Lifestyle"], bio: "award-winning photographer with 5 years exp.", exp: "5 Yrs" },
+            { id: 'c2', name: "Mike Chen", role: "Video Editor", rate: "₹5,000/project", tags: ["Reels", "TikTok"], bio: "Specialist in viral short-form content.", exp: "3 Yrs" },
+            { id: 'c3', name: "Design Studio A", role: "Graphic Design", rate: "₹1,500/hr", tags: ["Branding", "Logos"], bio: "Full service branding agency.", exp: "Agency" },
+            { id: 'c4', name: "Arjun Reddy", role: "Web Developer", rate: "₹10,000/site", tags: ["Shopify", "React"], bio: "E-commerce expert helping brands scale.", exp: "4 Yrs" },
+            { id: 'c5', name: "Priya Patel", role: "Social Manager", rate: "₹15,000/mo", tags: ["Strategy", "Posting"], bio: "I handle your community while you sleep.", exp: "2 Yrs" },
+        ];
+    },
+
+    async getGigs() {
+        await new Promise(r => setTimeout(r, SIMULATED_DELAY));
+        return [
+            { id: 'g1', title: "Product Shoot for Coffee Brand", budget: "₹15,000", type: "Photography", desc: "Need high-res shots for our new packaging." },
+            { id: 'g2', title: "Reel Editor Needed", budget: "₹2,000/video", type: "Video Editing", desc: "Ongoing work for a fast-paced fashion brand." },
+            { id: 'g3', title: "Logo Redesign", budget: "₹5,000", type: "Design", desc: "Minimalist redesign for a tech startup." },
+            { id: 'g4', title: "Shopify Store Setup", budget: "₹20,000", type: "Web Dev", desc: "Full setup from scratch for a clothing line." }
         ];
     }
 };
