@@ -1,0 +1,247 @@
+.plan-header {
+    margin-bottom: 2rem;
+}
+
+.plan-header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.plan-header p {
+    color: var(--text-muted);
+}
+
+.highlight {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.form-panel {
+    padding: 2.5rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.form-grid {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: var(--text-muted);
+}
+
+.input-wrapper {
+    position: relative;
+}
+
+.input-icon {
+    position: absolute;
+    left: 0.75rem;
+    top: 0.75rem;
+    color: var(--text-dim);
+}
+
+input,
+textarea {
+    width: 100%;
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 0.75rem 1rem 0.75rem 2.5rem;
+    color: white;
+    font-size: 1rem;
+    outline: none;
+    box-sizing: border-box;
+    /* Critical for width: 100% */
+    transition: border-color 0.2s;
+    font-family: inherit;
+}
+
+.simple-input {
+    padding-left: 1rem;
+}
+
+input:focus {
+    border-color: var(--primary);
+}
+
+.full-width {
+    width: 100%;
+    margin-top: 1rem;
+}
+
+/* Loading */
+.loading-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 300px;
+}
+
+.spinner {
+    width: 48px;
+    height: 48px;
+    border: 4px solid var(--border);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Results */
+.strict-alert {
+    background: rgba(245, 158, 11, 0.1);
+    border: 1px solid rgba(245, 158, 11, 0.2);
+    border-radius: 12px;
+    padding: 1rem;
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+}
+
+.alert-icon {
+    color: var(--warning);
+    margin-top: 4px;
+}
+
+.strict-alert h3 {
+    color: var(--warning);
+    font-size: 1.1rem;
+    margin: 0 0 0.25rem 0;
+}
+
+.strict-alert p {
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+.results-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+}
+
+@media (max-width: 768px) {
+    .results-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.section-icon {
+    color: var(--primary);
+    margin-right: 0.5rem;
+    vertical-align: bottom;
+}
+
+.schedule-list {
+    padding: 0;
+    overflow: hidden;
+}
+
+.schedule-item {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.schedule-item:last-child {
+    border-bottom: none;
+}
+
+.schedule-item:hover {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.schedule-left {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.day-label {
+    width: 80px;
+    font-weight: 500;
+    color: var(--text-muted);
+}
+
+.task-title {
+    margin: 0 0 0.25rem 0;
+    font-weight: 500;
+    color: var(--text-main);
+}
+
+.task-tag {
+    font-size: 0.75rem;
+    background: rgba(59, 130, 246, 0.15);
+    color: #60a5fa;
+    padding: 2px 8px;
+    border-radius: 12px;
+}
+
+.time-label {
+    font-family: monospace;
+    color: var(--text-dim);
+    font-size: 0.9rem;
+}
+
+.strategy-card {
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.strategy-label {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-dim);
+    margin-bottom: 0.5rem;
+    margin-top: 1rem;
+}
+
+.strategy-label:first-child {
+    margin-top: 0;
+}
+
+.strategy-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+}
+
+.platform-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.platform-tag {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    padding: 0.4rem 0.8rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.platform-tag svg {
+    color: var(--success);
+}
